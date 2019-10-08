@@ -59,7 +59,8 @@ namespace SocketTest.Shared
         {
             if (ClientSocket != null && ClientSocket.Connected)
             {
-                ClientSocket.BeginSend(AddSize(data), 0, data.Length, 0, ResponseSend, this);
+                var message = AddSize(data);
+                ClientSocket.BeginSend(message, 0, message.Length, 0, ResponseSend, this);
             }
             else
             {
