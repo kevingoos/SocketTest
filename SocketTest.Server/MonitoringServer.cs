@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SocketTest.Shared;
@@ -22,17 +20,16 @@ namespace SocketTest.Server
 
         public void SetupPermissions()
         {
-            var permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, Dns.GetHostName(), 8080);
+            var permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, Dns.GetHostName(), 11000);
             permission.Demand();
         }
 
         public void Start()
         {
-            var ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-            var ipAddress = ipHostInfo.AddressList[0];
-            var localEndPoint = new IPEndPoint(ipAddress, 11000);
+            var localEndPoint = new IPEndPoint(IPAddress.IPv6Any, 11000);
 
-            var listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            var listener = new Socket(localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            listener.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
 
             try
             {
